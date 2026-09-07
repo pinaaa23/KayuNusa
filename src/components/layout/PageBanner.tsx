@@ -16,7 +16,7 @@ interface PageBannerProps {
 
 export const PageBanner: React.FC<PageBannerProps> = ({ title, breadcrumbs }) => {
   return (
-    <section className="relative w-full py-20 sm:py-24 bg-neutral-100 flex items-center justify-center text-center overflow-hidden border-b border-neutral-200">
+    <section className="relative w-full py-12 sm:py-16 bg-neutral-100 flex items-center justify-center text-center overflow-hidden border-b border-neutral-200">
       {/* Background Image with texture & soft blur overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30 filter blur-[2px]"
