@@ -26,18 +26,16 @@ export const mockProducts: Product[] = [
     categoryId: "cat-1",
     sku: "SYL-001",
     tags: ["Kursi", "Kafe", "Modern", "Ruang Makan"],
-    mainImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
+    mainImage: "/images/syltherine-purple.jpg",
     images: [
       "/images/syltherine-purple.jpg",
       "/images/syltherine-black.jpg",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
     ],
     variants: {
       sizes: ["Standard", "Custom"],
       colors: [
         { name: "Purple", hex: "#5E1A5E", image: "/images/syltherine-purple.jpg" },
         { name: "Black", hex: "#000000", image: "/images/syltherine-black.jpg" },
-        { name: "Gold", hex: "#B88E2F", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop" },
       ],
     },
     stock: 25,
@@ -59,9 +57,16 @@ export const mockProducts: Product[] = [
     tags: ["Kursi", "Minimalis", "Kayu"],
     mainImage: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop",
+      "/images/leviosa-white.jpg",
+      "/images/leviosa-black.jpg",
     ],
-    variants: defaultVariants,
+    variants: {
+      sizes: ["Standard", "Large", "Custom"],
+      colors: [
+        { name: "White", hex: "#FFFFFF", image: "/images/leviosa-white.jpg" },
+        { name: "Black", hex: "#000000", image: "/images/leviosa-black.jpg" },
+      ],
+    },
     stock: 18,
     featured: true,
     createdAt: "2026-01-12T00:00:00.000Z",
@@ -117,7 +122,11 @@ export const mockProducts: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Grey", hex: "#808080", image: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 12,
     featured: true,
     createdAt: "2026-02-01T00:00:00.000Z",
@@ -139,7 +148,11 @@ export const mockProducts: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Grey", hex: "#808080", image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 30,
     featured: true,
     createdAt: "2026-02-05T00:00:00.000Z",
@@ -162,7 +175,11 @@ export const mockProducts: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Grey", hex: "#A9A9A9", image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 15,
     featured: true,
     createdAt: "2026-02-10T00:00:00.000Z",
@@ -186,7 +203,11 @@ export const mockProducts: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Grey", hex: "#808080", image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 6,
     featured: true,
     createdAt: "2026-02-14T00:00:00.000Z",
@@ -209,7 +230,11 @@ export const mockProducts: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Brown Leather", hex: "#A0522D", image: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 10,
     featured: true,
     createdAt: "2026-02-18T00:00:00.000Z",
@@ -228,14 +253,15 @@ export const mockProducts: Product[] = [
     categoryId: "cat-2",
     sku: "SS001",
     tags: ["Sofa", "Kursi", "Home", "Shop"],
-    mainImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop",
+    mainImage: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      colors: [
+        { name: "Brown", hex: "#8B4513", image: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 20,
     featured: false,
     createdAt: "2026-02-20T00:00:00.000Z",
