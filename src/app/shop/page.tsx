@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SlidersHorizontal, LayoutGrid, List, Share2, Heart, X, Search } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+// Removed duplicate import; useEffect already imported from line 3
+import { SlidersHorizontal, LayoutGrid, List, Share2, Heart, X, Search, Tag } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FeaturesBanner } from "@/components/layout/FeaturesBanner";
@@ -16,9 +18,12 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { Product } from "@/types/product";
 
-export default function ShopPage() {
+function ShopContent() {
   const { addToCart, formatIDR } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const listRef = useRef<HTMLDivElement>(null);
 
   // State for view mode: 'grid' or 'list'
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -31,6 +36,43 @@ export default function ShopPage() {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [priceRange, setPriceRange] = useState<number>(15000000);
+
+  // Slug → Category name mapping
+  const slugToCategoryName: Record<string, string> = useMemo(() => {
+    const map: Record<string, string> = {};
+    mockCategories.forEach((cat) => {
+      map[cat.slug] = cat.name;
+    });
+    return map;
+  }, []);
+
+  // Read ?category= from URL and apply filter on mount / URL change
+  useEffect(() => {
+    const categorySlug = searchParams.get("category");
+    if (categorySlug && slugToCategoryName[categorySlug]) {
+      setSelectedCategory(slugToCategoryName[categorySlug]);
+    } else if (!categorySlug) {
+      setSelectedCategory("all");
+    }
+    setCurrentPage(1);
+  }, [searchParams, slugToCategoryName]);
+
+  // Helper: clear category filter and remove from URL
+  const clearCategoryFilter = () => {
+    setSelectedCategory("all");
+    setCurrentPage(1);
+    router.push("/shop");
+  };
+
+  // Helper: set category filter and update URL
+  const applyCategoryFilter = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    setCurrentPage(1);
+    const cat = mockCategories.find((c) => c.name === categoryName);
+    if (cat) {
+      router.push(`/shop?category=${cat.slug}`);
+    }
+  };
 
   // Share handler
   const handleShare = (product: Product, e: React.MouseEvent) => {
@@ -91,6 +133,13 @@ export default function ShopPage() {
     });
   }, [extendedProducts, selectedCategory, searchQuery, priceRange, sortBy]);
 
+  // Auto‑scroll to product list when a category is active
+  useEffect(() => {
+    if (selectedCategory !== "all" && listRef.current) {
+      listRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedCategory]);
+
   // Pagination calculation
   const totalProducts = filteredProducts.length;
   const totalPages = Math.ceil(totalProducts / itemsPerPage) || 1;
@@ -113,62 +162,84 @@ export default function ShopPage() {
 
         {/* Toolbar & Filter Bar Strip */}
         <section className="bg-[#FAF4EF] border-b border-amber-100/60 py-4 px-4 sm:px-6 lg:px-8 transition-all">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Left Controls (Filter Button, View Modes, Counter) */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-neutral-800 w-full md:w-auto justify-between md:justify-start">
-              {/* Filter Button */}
-              <button
-                onClick={() => setIsFilterDrawerOpen(!isFilterDrawerOpen)}
-                className="flex items-center gap-2 font-medium hover:text-[#B88E2F] py-2 px-3 rounded-lg hover:bg-white/60 transition-all border border-transparent hover:border-neutral-200"
-              >
-                <SlidersHorizontal className="w-5 h-5" />
-                <span className="font-medium text-base">Filter</span>
-              </button>
+          <div className="max-w-7xl mx-auto flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              {/* Left Controls (Filter Button, View Modes, Search) */}
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-neutral-800 w-full md:w-auto justify-between md:justify-start">
+                {/* Filter Button */}
+                <button
+                  onClick={() => setIsFilterDrawerOpen(!isFilterDrawerOpen)}
+                  className="flex items-center gap-2 font-medium hover:text-[#B88E2F] py-2 px-3 rounded-lg hover:bg-white/60 transition-all border border-transparent hover:border-neutral-200"
+                >
+                  <SlidersHorizontal className="w-5 h-5" />
+                  <span className="font-medium text-base">Filter</span>
+                </button>
 
-              {/* View Switchers */}
-              <div className="flex items-center gap-2 border-l border-neutral-300 pl-4 sm:pl-6">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid"
-                      ? "bg-[#B88E2F] text-white shadow-sm"
-                      : "text-neutral-600 hover:text-[#B88E2F] hover:bg-white/60"
-                  }`}
-                  title="Grid View"
-                >
-                  <LayoutGrid className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list"
-                      ? "bg-[#B88E2F] text-white shadow-sm"
-                      : "text-neutral-600 hover:text-[#B88E2F] hover:bg-white/60"
-                  }`}
-                  title="List View"
-                >
-                  <List className="w-5 h-5" />
-                </button>
+                {/* View Switchers */}
+                <div className="flex items-center gap-2 border-l border-neutral-300 pl-4 sm:pl-6">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-lg transition-all ${
+                      viewMode === "grid"
+                        ? "bg-[#B88E2F] text-white shadow-sm"
+                        : "text-neutral-600 hover:text-[#B88E2F] hover:bg-white/60"
+                    }`}
+                    title="Grid View"
+                  >
+                    <LayoutGrid className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-lg transition-all ${
+                      viewMode === "list"
+                        ? "bg-[#B88E2F] text-white shadow-sm"
+                        : "text-neutral-600 hover:text-[#B88E2F] hover:bg-white/60"
+                    }`}
+                    title="List View"
+                  >
+                    <List className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative flex-1 min-w-[200px] sm:min-w-[260px] border-l border-neutral-300 pl-4 sm:pl-6">
+                  <Search className="w-4 h-4 text-neutral-400 absolute left-7 sm:left-9 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Cari produk..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="w-full text-sm pl-9 pr-4 py-2 bg-white border border-neutral-200 rounded-lg focus:outline-none focus:border-[#B88E2F] placeholder:text-neutral-400 shadow-sm"
+                  />
+                </div>
               </div>
 
-                {/* Search Bar (Replaces Menampilkan counter text) */}
-              <div className="relative flex-1 min-w-[200px] sm:min-w-[260px] border-l border-neutral-300 pl-4 sm:pl-6">
-                <Search className="w-4 h-4 text-neutral-400 absolute left-7 sm:left-9 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Cari produk..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full text-sm pl-9 pr-4 py-2 bg-white border border-neutral-200 rounded-lg focus:outline-none focus:border-[#B88E2F] placeholder:text-neutral-400 shadow-sm"
-                />
+              {/* Right: Product count */}
+              <div className="text-sm text-neutral-500 font-medium whitespace-nowrap">
+                {filteredProducts.length} produk ditemukan
               </div>
             </div>
 
-            {/* Right Side Empty as requested */}
-            <div></div>
+            {/* Active Category Filter Pill */}
+            {selectedCategory !== "all" && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-neutral-500 font-medium">Filter aktif:</span>
+                <span className="inline-flex items-center gap-1.5 bg-[#B88E2F] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                  <Tag className="w-3 h-3" />
+                  {selectedCategory}
+                  <button
+                    onClick={clearCategoryFilter}
+                    className="ml-1 hover:text-amber-200 transition-colors"
+                    aria-label="Hapus filter kategori"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </span>
+              </div>
+            )}
           </div>
         </section>
 
@@ -213,10 +284,7 @@ export default function ShopPage() {
                     {mockCategories.map((cat) => (
                       <button
                         key={cat.id}
-                        onClick={() => {
-                          setSelectedCategory(cat.name);
-                          setCurrentPage(1);
-                        }}
+                        onClick={() => applyCategoryFilter(cat.name)}
                         className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                           selectedCategory === cat.name
                             ? "bg-[#B88E2F] text-white shadow-sm"
@@ -238,6 +306,16 @@ export default function ShopPage() {
                       }`}
                     >
                       Sofas
+                    </button>
+                    <button
+                      onClick={clearCategoryFilter}
+                      className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                        selectedCategory === "all"
+                          ? "bg-[#B88E2F] text-white shadow-sm"
+                          : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                      }`}
+                    >
+                      Semua Produk
                     </button>
                   </div>
                 </div>
@@ -289,7 +367,7 @@ export default function ShopPage() {
               <div className="pt-2 flex justify-end">
                 <button
                   onClick={() => {
-                    setSelectedCategory("all");
+                    clearCategoryFilter();
                     setSearchQuery("");
                     setPriceRange(15000000);
                     setSortBy("default");
@@ -305,7 +383,7 @@ export default function ShopPage() {
         )}
 
         {/* Product Catalog Display Section */}
-        <section className="py-12 sm:py-16 bg-white">
+        <section className="py-12 sm:py-16 bg-white" ref={listRef}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {currentProducts.length === 0 ? (
               <div className="text-center py-20 space-y-4">
@@ -320,7 +398,7 @@ export default function ShopPage() {
                 </p>
                 <button
                   onClick={() => {
-                    setSelectedCategory("all");
+                    clearCategoryFilter();
                     setSearchQuery("");
                     setPriceRange(15000000);
                   }}
@@ -566,5 +644,20 @@ export default function ShopPage() {
       <CartDrawer />
       <AuthModal />
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-[#B88E2F] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-neutral-500 font-medium">Memuat produk...</p>
+        </div>
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }

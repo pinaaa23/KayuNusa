@@ -1,6 +1,6 @@
 export interface ProductVariant {
   sizes?: string[]; // e.g. ['L', 'XL', 'XS']
-  colors?: { name: string; hex: string }[]; // e.g. [{ name: 'Purple', hex: '#816DFA' }, { name: 'Black', hex: '#000000' }, { name: 'Gold', hex: '#B88E2F' }]
+  colors?: { name: string; hex: string; image?: string }[]; // Optional image for color variant
 }
 
 export interface ProductReview {

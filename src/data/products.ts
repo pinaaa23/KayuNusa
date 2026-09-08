@@ -1,9 +1,9 @@
 import { Product } from "@/types/product";
 
 const defaultVariants = {
-  sizes: ["L", "XL", "XS"],
+  sizes: ["Standard", "Large", "Custom"],
   colors: [
-    { name: "Purple", hex: "#816DFA" },
+    { name: "Purple", hex: "#5E1A5E" },
     { name: "Black", hex: "#000000" },
     { name: "Gold", hex: "#B88E2F" },
   ],
@@ -28,10 +28,18 @@ export const mockProducts: Product[] = [
     tags: ["Kursi", "Kafe", "Modern", "Ruang Makan"],
     mainImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
     images: [
+      "/images/syltherine-purple.jpg",
+      "/images/syltherine-black.jpg",
       "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=1000&auto=format&fit=crop",
     ],
-    variants: defaultVariants,
+    variants: {
+      sizes: ["Standard", "Custom"],
+      colors: [
+        { name: "Purple", hex: "#5E1A5E", image: "/images/syltherine-purple.jpg" },
+        { name: "Black", hex: "#000000", image: "/images/syltherine-black.jpg" },
+        { name: "Gold", hex: "#B88E2F", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop" },
+      ],
+    },
     stock: 25,
     featured: true,
     createdAt: "2026-01-10T00:00:00.000Z",
@@ -75,9 +83,18 @@ export const mockProducts: Product[] = [
     tags: ["Sofa", "Luxury", "Ruang Keluarga"],
     mainImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop",
+      "/images/lolito-purple.jpg",
+      "/images/lolito-black.jpg",
+      "/images/lolito-gold.jpg",
     ],
-    variants: defaultVariants,
+    variants: {
+      sizes: ["2-Seater", "3-Seater", "Custom"],
+      colors: [
+        { name: "Purple", hex: "#5E1A5E", image: "/images/lolito-purple.jpg" },
+        { name: "Black", hex: "#000000", image: "/images/lolito-black.jpg" },
+        { name: "Gold", hex: "#B88E2F", image: "/images/lolito-gold.jpg" },
+      ],
+    },
     stock: 8,
     featured: true,
     createdAt: "2026-01-15T00:00:00.000Z",
