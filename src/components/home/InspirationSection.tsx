@@ -27,7 +27,7 @@ export const InspirationSection: React.FC = () => {
             </p>
             <div>
               <Link
-                href="/shop"
+                href="/inspirations"
                 className="inline-block bg-[#B88E2F] hover:bg-[#9E7824] text-white font-bold text-sm px-9 py-3.5 rounded-md shadow-md shadow-[#B88E2F]/20 transition-all duration-300 hover:-translate-y-0.5"
               >
                 Explore More
@@ -56,12 +56,13 @@ export const InspirationSection: React.FC = () => {
                   {mockInspirations[activeIndex].title}
                 </h3>
 
-                <Link
-                  href="/shop"
+                <button
+                  onClick={nextSlide}
                   className="absolute -right-12 bottom-0 w-12 h-12 bg-[#B88E2F] text-white flex items-center justify-center rounded-r-xl hover:bg-[#9E7824] transition-colors"
+                  aria-label="Next slide"
                 >
                   <ArrowRight className="w-5 h-5" />
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -76,14 +77,7 @@ export const InspirationSection: React.FC = () => {
               />
             </div>
 
-            {/* Next Arrow Button */}
-            <button
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#B88E2F] shadow-xl border border-neutral-100 flex items-center justify-center hover:bg-[#B88E2F] hover:text-white transition-all z-20"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+            {/* Next Arrow Button Removed */}
 
             {/* Pagination Dots */}
             <div className="absolute -bottom-10 left-0 flex items-center gap-3">

@@ -26,7 +26,7 @@ export const CartDrawer: React.FC = () => {
             <div className="flex items-center gap-3">
               <ShoppingBag className="w-6 h-6 text-[#B88E2F]" />
               <h2 className="font-bold text-xl text-neutral-900">
-                Shopping Cart
+                Keranjang
               </h2>
             </div>
 
@@ -114,7 +114,7 @@ export const CartDrawer: React.FC = () => {
                   onClick={closeCart}
                   className="py-2.5 px-3 border border-neutral-900 rounded-full text-center text-xs font-semibold text-neutral-900 hover:bg-neutral-900 hover:text-white transition-all"
                 >
-                  Cart
+                  Keranjang
                 </Link>
 
                 <Link
@@ -126,11 +126,11 @@ export const CartDrawer: React.FC = () => {
                 </Link>
 
                 <Link
-                  href="/comparison"
+                  href={cart.length > 0 ? `/comparison?id=${cart[0].product.id}` : "/comparison"}
                   onClick={closeCart}
                   className="py-2.5 px-3 border border-neutral-900 rounded-full text-center text-xs font-semibold text-neutral-900 hover:bg-neutral-900 hover:text-white transition-all"
                 >
-                  Comparison
+                  Bandingkan
                 </Link>
               </div>
             </div>

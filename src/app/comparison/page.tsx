@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Star, ChevronDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -13,11 +14,21 @@ import { AuthModal } from "@/components/modals/AuthModal";
 import { mockProducts } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 
-export default function ComparisonPage() {
+function ComparisonContent() {
   const { addToCart, formatIDR } = useCart();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const [prod1, setProd1] = useState(mockProducts[8] || mockProducts[0]); // Asgaard Sofa
   const [prod2, setProd2] = useState(mockProducts[2]); // Lolito / Outdoor Sofa Set
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      const found = mockProducts.find((p) => p.id === id || p.slug === id);
+      if (found) setProd1(found);
+    }
+  }, [id]);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -107,21 +118,46 @@ export default function ComparisonPage() {
                   Tambahkan Produk
                 </h4>
                 <div className="relative">
-                  <select
-                    onChange={(e) => {
-                      const selected = mockProducts.find((p) => p.id === e.target.value);
-                      if (selected) setProd2(selected);
-                    }}
-                    className="w-full bg-[#B88E2F] text-white font-bold text-sm py-3 px-4 rounded-lg appearance-none cursor-pointer focus:outline-none pr-10 shadow-md"
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="w-full bg-[#B88E2F] flex items-center justify-between text-white font-bold text-sm py-3 px-4 rounded-lg cursor-pointer focus:outline-none shadow-md"
                   >
-                    <option value="">Pilih Produk</option>
-                    {mockProducts.map((p) => (
-                      <option key={p.id} value={p.id} className="bg-white text-neutral-900">
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-5 h-5 text-white absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <span className="truncate">{prod2 ? prod2.name : "Pilih Produk"}</span>
+                    <ChevronDown className="w-5 h-5 text-white flex-shrink-0" />
+                  </button>
+
+                  {isDropdownOpen && (
+                    <div className="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-xl max-h-80 overflow-y-auto border border-neutral-100 divide-y divide-neutral-100">
+                      {mockProducts.map((p) => (
+                        <div
+                          key={p.id}
+                          onClick={() => {
+                            setProd2(p);
+                            setIsDropdownOpen(false);
+                          }}
+                          className="flex items-center gap-4 p-3 hover:bg-neutral-50 cursor-pointer transition-colors"
+                        >
+                          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-[#F9F1E7] flex-shrink-0">
+                            <Image
+                              src={p.mainImage}
+                              alt={p.name}
+                              fill
+                              sizes="48px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-bold text-neutral-900 truncate">
+                              {p.name}
+                            </h4>
+                            <p className="text-xs text-neutral-500 font-medium mt-0.5">
+                              {formatIDR(p.price)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -264,5 +300,13 @@ export default function ComparisonPage() {
       <CartDrawer />
       <AuthModal />
     </div>
+  );
+}
+
+export default function ComparisonPage() {
+  return (
+    <Suspense fallback={<div>Loading comparison...</div>}>
+      <ComparisonContent />
+    </Suspense>
   );
 }

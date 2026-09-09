@@ -206,7 +206,7 @@ export default function ProductDetailClient({ slug }: { slug: string }) {
 
                   {/* Compare Button */}
                   <Link
-                    href="/comparison"
+                    href={`/comparison?id=${product.id}`}
                     className="border-2 border-neutral-900 hover:bg-neutral-900 hover:text-white text-neutral-900 font-bold text-sm px-6 py-3.5 rounded-xl transition-all"
                   >
                     + Bandingkan
