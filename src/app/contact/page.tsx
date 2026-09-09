@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, Phone, Clock } from "lucide-react";
+import Image from "next/image";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { FeaturesBanner } from "@/components/layout/FeaturesBanner";
-import { PageBanner } from "@/components/layout/PageBanner";
 import { CartDrawer } from "@/components/modals/CartDrawer";
 import { AuthModal } from "@/components/modals/AuthModal";
 
@@ -27,143 +25,118 @@ export default function ContactPage() {
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
 
-      <main className="flex-1">
-        <PageBanner
-          title="Contact"
-          breadcrumbs={[
-            { name: "Home", href: "/" },
-            { name: "Contact" },
-          ]}
-        />
+      <main className="flex-1 bg-neutral-100 flex items-center justify-center py-10 lg:py-16 px-4 sm:px-6 lg:px-8 relative z-0">
+        
+        {/* Abstract Background split like the reference (light gray top, dark gray bottom) */}
+        <div className="absolute inset-0 z-[-1] flex flex-col">
+          <div className="flex-1 bg-[#ececec]"></div>
+          <div className="flex-1 bg-[#222222]"></div>
+        </div>
 
-        <section className="py-16 sm:py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Header Text */}
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-              <h2 className="font-bold text-3xl sm:text-4xl text-neutral-900">
-                Hubungi Kami
-              </h2>
-              <p className="text-neutral-500 text-sm sm:text-base leading-relaxed">
-                Untuk informasi lebih lanjut mengenai produk & layanan kami, jangan ragu untuk mengirimkan email kepada kami. Staf kami selalu siap membantu Anda. Jangan ragu!
-              </p>
+        {/* Main Card with thick border (frame) */}
+        <div className="max-w-[1300px] w-full mx-auto relative shadow-2xl overflow-hidden flex flex-col lg:flex-row bg-white border-4 sm:border-8 border-[#222222] rounded-xl lg:rounded-2xl min-h-[500px]">
+          
+          {/* Left Content (Wider) */}
+          <div className="w-full lg:w-[75%] p-8 sm:p-12 lg:p-16 xl:p-20 flex flex-col justify-center">
+            
+            {/* Title Row - Spans full width of left container */}
+            <div className="mb-10 lg:mb-16">
+              <h1 className="text-6xl sm:text-[5.5rem] lg:text-[7rem] font-black text-neutral-900 tracking-tighter uppercase leading-none">
+                CONTACT
+              </h1>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-              {/* Left Contact Info Cards */}
-              <div className="lg:col-span-5 space-y-8 pr-4">
-                <div className="flex items-start gap-5">
-                  <div className="p-2.5 text-neutral-900 mt-1">
-                    <MapPin className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-neutral-900">Alamat</h3>
-                    <p className="text-neutral-600 text-sm mt-1 leading-relaxed">
-                      Jl. Raya Janti, Wonocatur, Bantul,<br />
-                      Daerah Istimewa Yogyakarta
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-5">
-                  <div className="p-2.5 text-neutral-900 mt-1">
-                    <Phone className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-neutral-900">Phone</h3>
-                    <p className="text-neutral-600 text-sm mt-1 leading-relaxed">
-                      Mobile 1: +(62) 8512-345-66<br />
-                      Mobile 2: +(62) 456-678-47
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-5">
-                  <div className="p-2.5 text-neutral-900 mt-1">
-                    <Clock className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-neutral-900">Jam Kerja</h3>
-                    <p className="text-neutral-600 text-sm mt-1 leading-relaxed">
-                      Senin - Jum'at: 09.00 - 21.00<br />
-                      Sabtu - Minggu: 09.00 - 17.00
-                    </p>
-                  </div>
-                </div>
+            {/* Split Below Title: Desc left, Form right */}
+            <div className="flex flex-col md:flex-row gap-10 xl:gap-14">
+              
+              {/* Description */}
+              <div className="md:w-5/12">
+                <p className="text-neutral-700 text-base sm:text-lg font-medium leading-relaxed pr-4">
+                  Untuk pertanyaan, atau sekadar menyapa, jangan ragu untuk menghubungi kami.
+                </p>
               </div>
 
-              {/* Right Contact Form */}
-              <div className="lg:col-span-7 bg-white">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-800 mb-2">
-                      Nama
+              {/* Form Grid */}
+              <div className="md:w-7/12">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
+                  
+                  <div className="sm:col-span-1">
+                    <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                      Nama Lengkap
                     </label>
                     <input
                       type="text"
-                      placeholder="Abc"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="w-full text-sm p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#B88E2F]"
+                      className="w-full text-sm py-2 bg-transparent border-b border-neutral-300 focus:outline-none focus:border-[#B88E2F] text-neutral-900 transition-colors"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-800 mb-2">
+                  <div className="sm:col-span-1">
+                    <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
                       Email
                     </label>
                     <input
                       type="email"
-                      placeholder="Abc@def.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
-                      className="w-full text-sm p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#B88E2F]"
+                      className="w-full text-sm py-2 bg-transparent border-b border-neutral-300 focus:outline-none focus:border-[#B88E2F] text-neutral-900 transition-colors"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-800 mb-2">
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
                       Subjek
                     </label>
                     <input
                       type="text"
-                      placeholder="This is an optional"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full text-sm p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#B88E2F]"
+                      className="w-full text-sm py-2 bg-transparent border-b border-neutral-300 focus:outline-none focus:border-[#B88E2F] text-neutral-900 transition-colors"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-800 mb-2">
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
                       Pesan
                     </label>
                     <textarea
-                      rows={5}
-                      placeholder="Hai! Aku mau memberikan....."
+                      rows={2}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
-                      className="w-full text-sm p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#B88E2F]"
+                      className="w-full text-sm py-2 bg-transparent border-b border-neutral-300 focus:outline-none focus:border-[#B88E2F] text-neutral-900 transition-colors resize-none"
                     />
                   </div>
 
-                  <div>
+                  <div className="sm:col-span-2 mt-2">
                     <button
                       type="submit"
-                      className="bg-[#B88E2F] hover:bg-[#9E7824] text-white font-bold text-sm px-14 py-4 rounded-lg shadow-md transition-all"
+                      className="inline-flex justify-center items-center bg-[#B88E2F] hover:bg-[#9E7824] text-white font-bold text-[11px] px-8 py-3.5 shadow-md transition-all uppercase tracking-widest"
                     >
-                      Submit
+                      Kirim Pesan
                     </button>
                   </div>
+
                 </form>
               </div>
+
             </div>
           </div>
-        </section>
 
-        <FeaturesBanner />
+          {/* Right Image (Smaller Space) */}
+          <div className="w-full lg:w-[25%] relative min-h-[250px] lg:min-h-full border-t-4 lg:border-t-0 lg:border-l-4 border-[#222222]">
+            <Image
+              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop"
+              alt="Interior Contact"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+        </div>
       </main>
 
       <Footer />
