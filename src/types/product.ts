@@ -13,6 +13,30 @@ export interface ProductReview {
   createdAt: string;
 }
 
+export interface ProductSpecifications {
+  umum?: {
+    paketPenjualan?: string;
+    materialSekunder?: string;
+    konfigurasi?: string;
+    bahanPelapis?: string;
+    warnaPelapis?: string;
+  };
+  produk?: {
+    materialIsi?: string;
+    jenisFinishing?: string;
+    sandaranKepalaDisesuaikan?: string;
+    kapasitasBebanMaksimum?: string;
+  };
+  ukuran?: {
+    lebar?: string;
+    tinggi?: string;
+    kedalaman?: string;
+  };
+  garansi?: {
+    ringkasan?: string;
+  };
+}
+
 export interface Product {
   id: string; // Firestore document ID
   name: string;
@@ -33,6 +57,7 @@ export interface Product {
   mainImage: string;
   images: string[];
   variants?: ProductVariant;
+  specifications?: ProductSpecifications;
   stock: number;
   featured?: boolean;
   createdAt: string;

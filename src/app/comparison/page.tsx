@@ -169,38 +169,38 @@ function ComparisonContent() {
                 <h3 className="font-extrabold text-xl text-neutral-900">Umum</h3>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Paket Penjualan</div>
-                  <div>1 sofa sectional</div>
-                  <div>1 sofa tiga dudukan, 2 sofa satu dudukan</div>
+                  <div>{prod1.specifications?.umum?.paketPenjualan || "-"}</div>
+                  <div>{prod2.specifications?.umum?.paketPenjualan || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Nomor Model</div>
-                  <div>TFCBLIGRBL6SRHS</div>
-                  <div>DTUBLIGRBL568</div>
+                  <div>{prod1.sku || "-"}</div>
+                  <div>{prod2.sku || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Material Sekunder</div>
-                  <div>Kayu solid</div>
-                  <div>Kayu solid</div>
+                  <div>{prod1.specifications?.umum?.materialSekunder || "-"}</div>
+                  <div>{prod2.specifications?.umum?.materialSekunder || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Konfigurasi</div>
-                  <div>Bentuk L</div>
-                  <div>Bentuk L</div>
+                  <div>{prod1.specifications?.umum?.konfigurasi || "-"}</div>
+                  <div>{prod2.specifications?.umum?.konfigurasi || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Bahan Pelapis</div>
-                  <div>Kain + Katun</div>
-                  <div>Kain + Katun</div>
+                  <div>{prod1.specifications?.umum?.bahanPelapis || "-"}</div>
+                  <div>{prod2.specifications?.umum?.bahanPelapis || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Warna Pelapis</div>
-                  <div>Abu abu terang</div>
-                  <div>Abu abu terang</div>
+                  <div>{prod1.specifications?.umum?.warnaPelapis || "-"}</div>
+                  <div>{prod2.specifications?.umum?.warnaPelapis || "-"}</div>
                   <div>-</div>
                 </div>
               </div>
@@ -210,26 +210,26 @@ function ComparisonContent() {
                 <h3 className="font-extrabold text-xl text-neutral-900">Produk</h3>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Material Isi</div>
-                  <div>Foam</div>
-                  <div>Matte</div>
+                  <div>{prod1.specifications?.produk?.materialIsi || "-"}</div>
+                  <div>{prod2.specifications?.produk?.materialIsi || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Jenis Finishing</div>
-                  <div>Abu-abu Terang</div>
-                  <div>Abu-abu Terang</div>
+                  <div>{prod1.specifications?.produk?.jenisFinishing || "-"}</div>
+                  <div>{prod2.specifications?.produk?.jenisFinishing || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Sandaran Kepala Dapat Disesuaikan</div>
-                  <div>Tidak</div>
-                  <div>Ya</div>
+                  <div>{prod1.specifications?.produk?.sandaranKepalaDisesuaikan || "-"}</div>
+                  <div>{prod2.specifications?.produk?.sandaranKepalaDisesuaikan || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Kapasitas Beban Maksimum</div>
-                  <div>280 KG</div>
-                  <div>300 KG</div>
+                  <div>{prod1.specifications?.produk?.kapasitasBebanMaksimum || "-"}</div>
+                  <div>{prod2.specifications?.produk?.kapasitasBebanMaksimum || "-"}</div>
                   <div>-</div>
                 </div>
               </div>
@@ -239,20 +239,20 @@ function ComparisonContent() {
                 <h3 className="font-extrabold text-xl text-neutral-900">Ukuran</h3>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Lebar</div>
-                  <div>265.32 cm</div>
-                  <div>265.32 cm</div>
+                  <div>{prod1.specifications?.ukuran?.lebar || "-"}</div>
+                  <div>{prod2.specifications?.ukuran?.lebar || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Tinggi</div>
-                  <div>76 cm</div>
-                  <div>76 cm</div>
+                  <div>{prod1.specifications?.ukuran?.tinggi || "-"}</div>
+                  <div>{prod2.specifications?.ukuran?.tinggi || "-"}</div>
                   <div>-</div>
                 </div>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Depth</div>
-                  <div>167.76 cm</div>
-                  <div>167.76 cm</div>
+                  <div>{prod1.specifications?.ukuran?.kedalaman || "-"}</div>
+                  <div>{prod2.specifications?.ukuran?.kedalaman || "-"}</div>
                   <div>-</div>
                 </div>
               </div>
@@ -262,8 +262,8 @@ function ComparisonContent() {
                 <h3 className="font-extrabold text-xl text-neutral-900">Garansi</h3>
                 <div className="grid grid-cols-4 gap-8 py-2 text-neutral-700">
                   <div className="font-medium text-neutral-900">Ringkasan Garansi</div>
-                  <div>Garansi pabrik 1 tahun</div>
-                  <div>Garansi pabrik 1 tahun 2 bulan</div>
+                  <div>{prod1.specifications?.garansi?.ringkasan || "-"}</div>
+                  <div>{prod2.specifications?.garansi?.ringkasan || "-"}</div>
                   <div>-</div>
                 </div>
 
