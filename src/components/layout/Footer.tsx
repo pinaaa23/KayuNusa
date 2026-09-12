@@ -5,11 +5,20 @@ import Link from "next/link";
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    alert(`Terima kasih telah berlangganan newsletter KayuNusa! (${email})`);
+    
+    // Show toast
+    setShowToast(true);
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+    
     setEmail("");
   };
 
@@ -62,19 +71,19 @@ export const Footer: React.FC = () => {
             <h4 className="text-sm font-medium text-neutral-400">Bantuan</h4>
             <ul className="space-y-3 font-semibold text-neutral-800 text-sm">
               <li>
-                <a href="#pembayaran" className="hover:text-[#B88E2F] transition-colors">
+                <Link href="/payment" className="hover:text-[#B88E2F] transition-colors">
                   Pembayaran
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#pengembalian" className="hover:text-[#B88E2F] transition-colors">
+                <Link href="/returns" className="hover:text-[#B88E2F] transition-colors">
                   Pengembalian
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#kebijakan-privasi" className="hover:text-[#B88E2F] transition-colors">
+                <Link href="/privacy" className="hover:text-[#B88E2F] transition-colors">
                   Kebijakan Privasi
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -106,6 +115,23 @@ export const Footer: React.FC = () => {
           2026 kayunusa. All rights reserved
         </div>
       </div>
+
+      {/* Subscription Success Toast */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="bg-neutral-900 text-white px-6 py-4 rounded-lg shadow-2xl border-l-4 border-[#B88E2F] flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#B88E2F]/20 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-[#B88E2F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-bold text-sm">Berhasil Berlangganan!</h4>
+              <p className="text-xs text-neutral-300 mt-0.5">Terima kasih telah berlangganan newsletter KayuNusa.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </footer>
   );
 };

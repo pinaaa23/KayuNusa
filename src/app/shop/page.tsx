@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 // Removed duplicate import; useEffect already imported from line 3
-import { SlidersHorizontal, LayoutGrid, List, Share2, Heart, X, Search, Tag } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, List, Share2, X, Search, Tag } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FeaturesBanner } from "@/components/layout/FeaturesBanner";
@@ -15,12 +15,11 @@ import { AuthModal } from "@/components/modals/AuthModal";
 import { mockProducts } from "@/data/products";
 import { mockCategories } from "@/data/categories";
 import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
+
 import { Product } from "@/types/product";
 
 function ShopContent() {
   const { addToCart, formatIDR } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
   const searchParams = useSearchParams();
   const router = useRouter();
   const listRef = useRef<HTMLDivElement>(null);
@@ -54,6 +53,12 @@ function ShopContent() {
     } else if (!categorySlug) {
       setSelectedCategory("all");
     }
+
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchQuery(query);
+    }
+
     setCurrentPage(1);
   }, [searchParams, slugToCategoryName]);
 
@@ -89,20 +94,8 @@ function ShopContent() {
     }
   };
 
-  // Duplicate product list to simulate 32 products as shown in reference image "Menampilkan 1-16 dari 32 produk"
   const extendedProducts = useMemo(() => {
-    const list: Product[] = [];
-    // Multiply products to create rich catalog
-    for (let i = 0; i < 4; i++) {
-      mockProducts.forEach((prod) => {
-        list.push({
-          ...prod,
-          id: `${prod.id}-dup-${i}`,
-          slug: prod.slug,
-        });
-      });
-    }
-    return list;
+    return mockProducts;
   }, []);
 
   // Filter & Sort logic
@@ -118,6 +111,7 @@ function ShopContent() {
       const matchSearch =
         !searchQuery ||
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Price Range Filter
@@ -223,21 +217,44 @@ function ShopContent() {
               </div>
             </div>
 
-            {/* Active Category Filter Pill */}
-            {selectedCategory !== "all" && (
+            {/* Active Filters Pill */}
+            {(selectedCategory !== "all" || searchQuery.trim() !== "") && (
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-neutral-500 font-medium">Filter aktif:</span>
-                <span className="inline-flex items-center gap-1.5 bg-[#B88E2F] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
-                  <Tag className="w-3 h-3" />
-                  {selectedCategory}
-                  <button
-                    onClick={clearCategoryFilter}
-                    className="ml-1 hover:text-amber-200 transition-colors"
-                    aria-label="Hapus filter kategori"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </span>
+                
+                {selectedCategory !== "all" && (
+                  <span className="inline-flex items-center gap-1.5 bg-[#B88E2F] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                    <Tag className="w-3 h-3" />
+                    Kategori: {selectedCategory}
+                    <button
+                      onClick={clearCategoryFilter}
+                      className="ml-1 hover:text-amber-200 transition-colors"
+                      aria-label="Hapus filter kategori"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </span>
+                )}
+
+                {searchQuery.trim() !== "" && (
+                  <span className="inline-flex items-center gap-1.5 bg-neutral-800 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                    <Search className="w-3 h-3" />
+                    Pencarian: &quot;{searchQuery}&quot;
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setCurrentPage(1);
+                        const params = new URLSearchParams(window.location.search);
+                        params.delete("q");
+                        router.push(`/shop?${params.toString()}`);
+                      }}
+                      className="ml-1 hover:text-neutral-300 transition-colors"
+                      aria-label="Hapus pencarian"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -411,7 +428,6 @@ function ShopContent() {
               /* GRID VIEW MODE (Matching Home.png & Produk.png) */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {currentProducts.map((product) => {
-                  const isWishlisted = isInWishlist(product.id);
                   return (
                     <div
                       key={product.id}
@@ -466,19 +482,6 @@ function ShopContent() {
                               <Share2 className="w-4 h-4" />
                               <span>Share</span>
                             </button>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleWishlist(product);
-                              }}
-                              className={`flex items-center gap-2 hover:text-[#B88E2F] transition-colors ${
-                                isWishlisted ? "text-rose-400" : ""
-                              }`}
-                            >
-                              <Heart className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`} />
-                              <span>Like</span>
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -513,7 +516,6 @@ function ShopContent() {
               /* LIST VIEW MODE */
               <div className="space-y-6">
                 {currentProducts.map((product) => {
-                  const isWishlisted = isInWishlist(product.id);
                   return (
                     <div
                       key={product.id}
@@ -577,15 +579,6 @@ function ShopContent() {
                             title="Share"
                           >
                             <Share2 className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => toggleWishlist(product)}
-                            className={`p-2 hover:bg-white rounded-lg transition-colors border border-neutral-200 ${
-                              isWishlisted ? "text-rose-500" : "text-neutral-600 hover:text-[#B88E2F]"
-                            }`}
-                            title="Wishlist"
-                          >
-                            <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
                           </button>
                         </div>
                       </div>

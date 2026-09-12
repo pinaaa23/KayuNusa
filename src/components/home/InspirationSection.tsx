@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { mockInspirations } from "@/data/inspirations";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const InspirationSection: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -15,7 +16,8 @@ export const InspirationSection: React.FC = () => {
 
   return (
     <section className="bg-[#FCF8F3] py-16 sm:py-24 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <ScrollReveal>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Text Column */}
           <div className="lg:col-span-5 space-y-6">
@@ -39,42 +41,63 @@ export const InspirationSection: React.FC = () => {
           <div className="lg:col-span-7 relative flex flex-col sm:flex-row gap-6 items-stretch">
             {/* Active Main Slide */}
             <div className="relative w-full sm:w-[380px] h-[480px] rounded-2xl overflow-hidden shadow-xl flex-shrink-0">
-              <Image
-                src={mockInspirations[activeIndex].image}
-                alt={mockInspirations[activeIndex].title}
-                fill
-                sizes="(max-width: 640px) 100vw, 380px"
-                className="object-cover transition-all duration-700"
-              />
+              <div 
+                className="flex h-full transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+              >
+                {mockInspirations.map((item, idx) => (
+                  <div key={idx} className="relative w-full h-full flex-shrink-0">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 380px"
+                      className="object-cover"
+                    />
 
-              {/* Floating Info Tag */}
-              <div className="absolute bottom-8 left-6 right-16 bg-white/90 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/40 space-y-1">
-                <p className="text-neutral-500 text-xs font-semibold tracking-wider">
-                  {mockInspirations[activeIndex].number} — {mockInspirations[activeIndex].category}
-                </p>
-                <h3 className="font-bold text-neutral-900 text-2xl">
-                  {mockInspirations[activeIndex].title}
-                </h3>
+                    {/* Floating Info Tag */}
+                    <div className="absolute bottom-8 left-6 right-16 bg-white/90 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/40 space-y-1">
+                      <p className="text-neutral-500 text-xs font-semibold tracking-wider">
+                        {item.number} — {item.category}
+                      </p>
+                      <h3 className="font-bold text-neutral-900 text-2xl">
+                        {item.title}
+                      </h3>
 
-                <button
-                  onClick={nextSlide}
-                  className="absolute -right-12 bottom-0 w-12 h-12 bg-[#B88E2F] text-white flex items-center justify-center rounded-r-xl hover:bg-[#9E7824] transition-colors"
-                  aria-label="Next slide"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+                      <button
+                        onClick={nextSlide}
+                        className="absolute -right-12 bottom-0 w-12 h-12 bg-[#B88E2F] text-white flex items-center justify-center rounded-r-xl hover:bg-[#9E7824] transition-colors"
+                        aria-label="Next slide"
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* Secondary Slide Preview */}
             <div className="relative flex-1 hidden sm:block h-[420px] my-auto rounded-2xl overflow-hidden opacity-80 shadow-md">
-              <Image
-                src={mockInspirations[(activeIndex + 1) % mockInspirations.length].image}
-                alt="Slide preview"
-                fill
-                sizes="300px"
-                className="object-cover"
-              />
+              <div 
+                className="flex h-full transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+              >
+                {mockInspirations.map((_, idx) => {
+                  const item = mockInspirations[(idx + 1) % mockInspirations.length];
+                  return (
+                    <div key={idx} className="relative w-full h-full flex-shrink-0">
+                      <Image
+                        src={item.image}
+                        alt="Slide preview"
+                        fill
+                        sizes="300px"
+                        className="object-cover"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Next Arrow Button Removed */}
@@ -97,6 +120,7 @@ export const InspirationSection: React.FC = () => {
           </div>
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 };

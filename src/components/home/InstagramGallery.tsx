@@ -3,12 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import { mockInstagramGallery } from "@/data/inspirations";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const InstagramGallery: React.FC = () => {
   return (
     <section className="py-20 bg-white overflow-hidden">
-      {/* Title */}
-      <div className="text-center mb-10 px-4">
+      <ScrollReveal>
+        {/* Title */}
+        <div className="text-center mb-10 px-4">
         <p className="text-neutral-500 font-semibold text-sm sm:text-base">
           Bagikan Inspirasi Ruangmu dengan
         </p>
@@ -52,6 +54,7 @@ export const InstagramGallery: React.FC = () => {
           })}
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 };

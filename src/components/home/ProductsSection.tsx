@@ -7,6 +7,7 @@ import { Share2, Heart } from "lucide-react";
 import { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 interface ProductsSectionProps {
   products: Product[];
@@ -32,7 +33,8 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ products }) =>
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <ScrollReveal>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center mb-12">
           <h2 className="font-bold text-3xl sm:text-4xl text-neutral-900">
@@ -152,6 +154,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ products }) =>
           </Link>
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 };

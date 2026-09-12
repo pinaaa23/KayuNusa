@@ -1,20 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { User, Search, Heart, ShoppingCart, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { User, Search, ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
+import { mockProducts } from "@/data/products";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeSearchQuery = searchParams.get("q");
+  const isSearchActive = !!activeSearchQuery;
   const { summary, toggleCart } = useCart();
-  const { wishlistCount } = useWishlist();
   const { user, openAuthModal, logoutMock } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const searchResults = useMemo(() => {
+    if (!searchKeyword.trim()) return [];
+    const kw = searchKeyword.toLowerCase();
+    return mockProducts
+      .filter((p) => 
+        p.name.toLowerCase().includes(kw) || 
+        p.category.toLowerCase().includes(kw) ||
+        p.subtitle.toLowerCase().includes(kw)
+      )
+      .slice(0, 5); // Limit to 5 results
+  }, [searchKeyword]);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -93,28 +111,83 @@ export const Header: React.FC = () => {
             )}
           </div>
 
-          {/* Search Icon Placeholder */}
-          <button
-            onClick={() => alert("Fitur pencarian interaktif siap dikembangkan!")}
-            className="p-2 text-neutral-700 hover:text-[#B88E2F] hover:bg-neutral-50 rounded-full transition-all"
-            title="Search"
-          >
-            <Search className="w-5 h-5" />
-          </button>
+          {/* Search Icon */}
+          <div className="relative">
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className={`p-2 hover:bg-neutral-50 rounded-full transition-all ${
+                isSearchOpen || isSearchActive ? "text-[#B88E2F]" : "text-neutral-700 hover:text-[#B88E2F]"
+              }`}
+              title="Search"
+            >
+              <Search className="w-5 h-5" />
+            </button>
 
-          {/* Wishlist Icon */}
-          <Link
-            href="/shop"
-            className="p-2 text-neutral-700 hover:text-[#B88E2F] hover:bg-neutral-50 rounded-full transition-all relative"
-            title="Wishlist"
-          >
-            <Heart className="w-5 h-5" />
-            {wishlistCount > 0 && (
-              <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                {wishlistCount}
-              </span>
+            {isSearchOpen && (
+              <div className="absolute right-0 mt-3 w-[350px] bg-white rounded-2xl shadow-2xl border border-neutral-100 p-4 z-50 animate-in fade-in slide-in-from-top-2">
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  setIsSearchOpen(false);
+                  if (searchKeyword.trim()) {
+                    router.push(`/shop?q=${encodeURIComponent(searchKeyword)}`);
+                  }
+                }} className="flex items-center gap-3">
+                  <input 
+                    type="text"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    placeholder="Cari produk (misal: Kursi)..."
+                    className="flex-1 text-base py-2 bg-transparent border-b-2 border-[#B88E2F] focus:outline-none text-neutral-900 placeholder:text-neutral-300"
+                    autoFocus
+                  />
+                  <button type="submit" className="text-[#B88E2F] p-2 hover:bg-amber-50 rounded-full transition-colors">
+                    <Search className="w-5 h-5" />
+                  </button>
+                </form>
+
+                {/* Live Search Results */}
+                {searchKeyword.trim() && (
+                  <div className="mt-4 flex flex-col gap-1">
+                    {searchResults.length > 0 ? (
+                      <>
+                        <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 px-2">Hasil Pencarian</h4>
+                        {searchResults.map((product) => (
+                          <button
+                            key={product.id}
+                            type="button"
+                            onClick={() => {
+                              setIsSearchOpen(false);
+                              router.push(`/shop/${product.slug}`);
+                            }}
+                            className="flex items-center gap-3 p-2 hover:bg-neutral-50 rounded-xl transition-colors text-left"
+                          >
+                            <div className="relative w-12 h-12 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0">
+                              <Image src={product.mainImage} alt={product.name} fill sizes="48px" className="object-cover" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-neutral-900 line-clamp-1">{product.name}</p>
+                              <p className="text-xs text-neutral-500">{product.category}</p>
+                            </div>
+                          </button>
+                        ))}
+                        <button 
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            router.push(`/shop?q=${encodeURIComponent(searchKeyword)}`);
+                          }}
+                          className="w-full text-center text-xs font-bold text-[#B88E2F] hover:text-[#9E7824] pt-3 pb-1"
+                        >
+                          Lihat semua hasil
+                        </button>
+                      </>
+                    ) : (
+                      <p className="text-sm text-neutral-500 text-center py-4">Tidak ada produk ditemukan.</p>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
-          </Link>
+          </div>
 
           {/* Cart Icon & Badge */}
           <button
@@ -193,7 +266,7 @@ export const Header: React.FC = () => {
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                alert("Fitur pencarian interaktif!");
+                router.push("/shop");
               }}
               className="flex items-center gap-2 text-neutral-700 hover:text-[#B88E2F] py-2 px-3 rounded-lg text-sm font-medium"
             >
