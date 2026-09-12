@@ -19,7 +19,7 @@ export const PageBanner: React.FC<PageBannerProps> = ({ title, breadcrumbs }) =>
     <section className="relative w-full py-12 sm:py-16 bg-neutral-100 flex items-center justify-center text-center overflow-hidden border-b border-neutral-200">
       {/* Background Image with texture & soft blur overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-30 filter blur-[2px]"
+        className="absolute inset-0 bg-cover bg-center opacity-30 filter blur-[2px] animate-image-zoom scale-[1.1]"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop')`,
         }}
@@ -27,7 +27,7 @@ export const PageBanner: React.FC<PageBannerProps> = ({ title, breadcrumbs }) =>
       <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/40 to-white/80" />
 
       {/* Content */}
-      <div className="relative z-10 space-y-3 px-4">
+      <div className="relative z-10 space-y-3 px-4 animate-fade-up opacity-0 delay-100">
         {/* Emblem Logo */}
         <div className="w-10 h-10 mx-auto rounded-lg bg-[#B88E2F] flex items-center justify-center text-white shadow-md shadow-[#B88E2F]/20">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

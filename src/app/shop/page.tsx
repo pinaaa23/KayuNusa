@@ -15,6 +15,7 @@ import { AuthModal } from "@/components/modals/AuthModal";
 import { mockProducts } from "@/data/products";
 import { mockCategories } from "@/data/categories";
 import { useCart } from "@/context/CartContext";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 import { Product } from "@/types/product";
 
@@ -155,7 +156,7 @@ function ShopContent() {
         />
 
         {/* Toolbar & Filter Bar Strip */}
-        <section className="bg-[#FAF4EF] border-b border-amber-100/60 py-4 px-4 sm:px-6 lg:px-8 transition-all">
+        <section className="bg-[#FAF4EF] border-b border-amber-100/60 py-4 px-4 sm:px-6 lg:px-8 transition-all animate-fade-up opacity-0 delay-200">
           <div className="max-w-7xl mx-auto flex flex-col gap-3">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Left Controls (Filter Button, View Modes, Search) */}
@@ -427,12 +428,12 @@ function ShopContent() {
             ) : viewMode === "grid" ? (
               /* GRID VIEW MODE (Matching Home.png & Produk.png) */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {currentProducts.map((product) => {
+                {currentProducts.map((product, idx) => {
                   return (
-                    <div
-                      key={product.id}
-                      className="group relative bg-[#F4F5F7] rounded-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl"
-                    >
+                    <ScrollReveal key={product.id} className={`h-full delay-${((idx % 4) + 1) * 100}`}>
+                      <div
+                        className="group relative h-full bg-[#F4F5F7] rounded-lg overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl"
+                      >
                       {/* Image Container */}
                       <div className="relative w-full h-[280px] bg-neutral-200 overflow-hidden">
                         <Image
@@ -509,18 +510,19 @@ function ShopContent() {
                         </div>
                       </div>
                     </div>
+                    </ScrollReveal>
                   );
                 })}
               </div>
             ) : (
               /* LIST VIEW MODE */
               <div className="space-y-6">
-                {currentProducts.map((product) => {
+                {currentProducts.map((product, idx) => {
                   return (
-                    <div
-                      key={product.id}
-                      className="bg-[#F4F5F7] rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6 items-center hover:shadow-lg transition-all"
-                    >
+                    <ScrollReveal key={product.id} className={`delay-${((idx % 4) + 1) * 100}`}>
+                      <div
+                        className="bg-[#F4F5F7] rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6 items-center hover:shadow-lg transition-all"
+                      >
                       <div className="relative w-full sm:w-60 h-48 rounded-lg overflow-hidden bg-neutral-200 flex-shrink-0">
                         <Image
                           src={product.mainImage}
@@ -583,6 +585,7 @@ function ShopContent() {
                         </div>
                       </div>
                     </div>
+                    </ScrollReveal>
                   );
                 })}
               </div>
